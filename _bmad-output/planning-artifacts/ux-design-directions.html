@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>projectGlass — Design Direction Exploration</title>
+<style>
+  /* Tokyo Night Palette */
+  :root {
+    --night: #1a1b26;
+    --storm: #24283b;
+    --dark: #16161e;
+    --text-primary: #c0caf5;
+    --text-secondary: #a9b1d6;
+    --text-tertiary: #565f89;
+    --accent: #7aa2f7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(15, 15, 20, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(86, 95, 137, 0.2);
+    padding: 12px 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .nav-title {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-tertiary);
+    margin-right: auto;
+    letter-spacing: 0.05em;
+  }
+
+  .nav button {
+    background: var(--storm);
+    border: 1px solid rgba(86, 95, 137, 0.3);
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+
+  .nav button:hover, .nav button.active {
+    background: var(--accent);
+    color: var(--night);
+    border-color: var(--accent);
+  }
+
+  /* Section wrapper */
+  .section {
+    display: none;
+    padding: 80px 24px 60px;
+    min-height: 100vh;
+  }
+
+  .section.active { display: block; }
+
+  .section-header {
+    max-width: 800px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+
+  .section-header h2 {
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .section-header p {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .label {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    background: var(--storm);
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 12px;
+  }
+
+  /* Placeholder photos */
+  .photo-placeholder {
+    background: var(--storm);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .photo-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Use colored gradients as photo stand-ins */
+  .ph-1 { background: linear-gradient(135deg, #2d4a3e, #1a3a5c, #2a1f3d); }
+  .ph-2 { background: linear-gradient(135deg, #3d2a1f, #5c3a1a, #3d3a2a); }
+  .ph-3 { background: linear-gradient(135deg, #1f2d3d, #1a4a5c, #2d1f3d); }
+  .ph-4 { background: linear-gradient(135deg, #3d1f2a, #5c1a3a, #2a2d3d); }
+  .ph-5 { background: linear-gradient(135deg, #2a3d1f, #3a5c1a, #1f3d2d); }
+  .ph-6 { background: linear-gradient(135deg, #1f3d3d, #1a5c5c, #3d2d1f); }
+  .ph-7 { background: linear-gradient(135deg, #3d2d1f, #5c4a1a, #1f2a3d); }
+  .ph-8 { background: linear-gradient(135deg, #2d1f3d, #4a1a5c, #3d3d1f); }
+  .ph-9 { background: linear-gradient(135deg, #1f3d2a, #1a5c3a, #3d1f2d); }
+
+  /* ===================== */
+  /* DIRECTION A: TIGHT    */
+  /* Compact grid, scale hover, centered header */
+  /* ===================== */
+
+  .dir-a .gallery-header {
+    text-align: center;
+    padding: 24px 0 20px;
+    background: var(--night);
+  }
+
+  .dir-a .gallery-header h1 {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.08em;
+  }
+
+  .dir-a .mockup-frame {
+    background: var(--night);
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(86, 95, 137, 0.15);
+  }
+
+  .dir-a .grid {
+    display: columns;
+    padding: 0 24px 24px;
+  }
+
+  .dir-a .masonry {
+    column-count: 3;
+    column-gap: 12px;
+  }
+
+  .dir-a .masonry .photo-placeholder {
+    break-inside: avoid;
+    margin-bottom: 12px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .dir-a .masonry .photo-placeholder:hover {
+    transform: scale(1.03);
+    z-index: 1;
+    position: relative;
+  }
+
+  /* ===================== */
+  /* DIRECTION B: SPACIOUS */
+  /* Looser grid, brightness hover, left header + subtitle */
+  /* ===================== */
+
+  .dir-b .gallery-header {
+    text-align: left;
+    padding: 28px 24px 24px;
+    background: var(--night);
+  }
+
+  .dir-b .gallery-header h1 {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.06em;
+  }
+
+  .dir-b .gallery-header .subtitle {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-tertiary);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+
+  .dir-b .mockup-frame {
+    background: var(--night);
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(86, 95, 137, 0.15);
+  }
+
+  .dir-b .masonry {
+    column-count: 3;
+    column-gap: 20px;
+    padding: 0 24px 24px;
+  }
+
+  .dir-b .masonry .photo-placeholder {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    transition: filter 0.3s ease;
+    cursor: pointer;
+    filter: brightness(0.92);
+  }
+
+  .dir-b .masonry .photo-placeholder:hover {
+    filter: brightness(1.05);
+  }
+
+  /* ===================== */
+  /* DIRECTION C: MINIMAL  */
+  /* No hover effect, ultra-minimal header, tight rhythm */
+  /* ===================== */
+
+  .dir-c .gallery-header {
+    text-align: center;
+    padding: 20px 0 16px;
+    background: var(--night);
+  }
+
+  .dir-c .gallery-header h1 {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-tertiary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .dir-c .mockup-frame {
+    background: var(--night);
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(86, 95, 137, 0.15);
+  }
+
+  .dir-c .masonry {
+    column-count: 3;
+    column-gap: 8px;
+    padding: 0 0 0;
+  }
+
+  .dir-c .masonry .photo-placeholder {
+    break-inside: avoid;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+
+  /* ===================== */
+  /* MOBILE MOCKUPS        */
+  /* ===================== */
+
+  .mobile-frame {
+    width: 375px;
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--night);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(86, 95, 137, 0.2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .mobile-header {
+    padding: 16px 0;
+    text-align: center;
+  }
+
+  .mobile-header h1 {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.06em;
+  }
+
+  .mobile-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mobile-feed .photo-placeholder {
+    width: 100%;
+  }
+
+  /* ===================== */
+  /* LIGHTBOX MOCKUPS      */
+  /* ===================== */
+
+  .lightbox-mockup {
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(86, 95, 137, 0.15);
+  }
+
+  .lb-below {
+    background: var(--dark);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lb-below .photo-area {
+    width: 100%;
+    max-width: 700px;
+    aspect-ratio: 3/2;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .lb-below .exif-area {
+    text-align: center;
+  }
+
+  .lb-below .exif-area .photo-title {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .lb-below .exif-area .exif-row {
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+  }
+
+  .lb-below .exif-area .exif-labels {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.03em;
+    margin-top: 4px;
+  }
+
+  .lb-below .close-btn {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 20px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+
+  /* Lightbox Side Panel */
+  .lb-side {
+    background: var(--dark);
+    padding: 24px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  .lb-side .photo-area {
+    flex: 1;
+    aspect-ratio: 3/2;
+    border-radius: 2px;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  .lb-side .exif-panel {
+    width: 200px;
+    flex-shrink: 0;
+    padding-top: 8px;
+  }
+
+  .lb-side .exif-panel .photo-title {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+
+  .lb-side .exif-panel .exif-item {
+    margin-bottom: 12px;
+  }
+
+  .lb-side .exif-panel .exif-label {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .lb-side .exif-panel .exif-value {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* Lightbox Minimal Inline */
+  .lb-minimal {
+    background: var(--dark);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lb-minimal .photo-area {
+    width: 100%;
+    max-width: 750px;
+    aspect-ratio: 3/2;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .lb-minimal .exif-inline {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+  }
+
+  .lb-minimal .exif-inline span {
+    margin: 0 6px;
+    color: rgba(86, 95, 137, 0.4);
+  }
+
+  /* Comparison grid */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .compare-item {
+    background: rgba(36, 40, 59, 0.3);
+    border: 1px solid rgba(86, 95, 137, 0.15);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .compare-item h3 {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .compare-item .desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 16px;
+  }
+
+  /* Hover demo */
+  .hover-demo {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hover-card {
+    width: 180px;
+    text-align: center;
+  }
+
+  .hover-card .photo-placeholder {
+    width: 180px;
+    height: 120px;
+    margin-bottom: 8px;
+  }
+
+  .hover-card .hover-label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.04em;
+  }
+
+  .hover-scale {
+    transition: transform 0.3s ease;
+  }
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  .hover-brightness {
+    filter: brightness(0.88);
+    transition: filter 0.3s ease;
+  }
+  .hover-brightness:hover {
+    filter: brightness(1.08);
+  }
+
+  .hover-none {
+    /* no effect */
+  }
+
+  /* Summary section */
+  .summary-table {
+    width: 100%;
+    max-width: 900px;
+    margin: 24px auto 0;
+    border-collapse: collapse;
+  }
+
+  .summary-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(86, 95, 137, 0.2);
+  }
+
+  .summary-table td {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(86, 95, 137, 0.1);
+  }
+
+  .summary-table .rec {
+    color: var(--accent);
+    font-size: 11px;
+    margin-left: 6px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-title">projectGlass — Design Directions</span>
+  <button class="active" onclick="show('overview')">Overview</button>
+  <button onclick="show('desktop-a')">A: Tight</button>
+  <button onclick="show('desktop-b')">B: Spacious</button>
+  <button onclick="show('desktop-c')">C: Minimal</button>
+  <button onclick="show('mobile')">Mobile</button>
+  <button onclick="show('lightbox')">Lightbox</button>
+  <button onclick="show('hover')">Hover FX</button>
+  <button onclick="show('summary')">Summary</button>
+</nav>
+
+<!-- OVERVIEW -->
+<section id="overview" class="section active">
+  <div class="section-header">
+    <h2>Design Direction Exploration</h2>
+    <p>Three variations on the same core vision — a Tokyo Night dark gallery. The differences are intentionally subtle: density, header treatment, hover behavior, and EXIF presentation.</p>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-item">
+      <span class="label">Direction A</span>
+      <h3>Tight & Lively</h3>
+      <p class="desc">12px gaps, centered header, scale-on-hover. The grid feels dense and energetic — lots of photos visible at once. Hover scale creates a sense of life and interactivity.</p>
+    </div>
+    <div class="compare-item">
+      <span class="label">Direction B</span>
+      <h3>Spacious & Subtle</h3>
+      <p class="desc">20px gaps, left-aligned header with subtitle, brightness hover. More breathing room between photos. The slight dimming of non-hovered photos creates a quiet spotlight effect.</p>
+    </div>
+    <div class="compare-item">
+      <span class="label">Direction C</span>
+      <h3>Ultra-Minimal</h3>
+      <p class="desc">8px gaps, uppercase micro-header, no hover effect. Maximum photo density. The grid feels like a seamless mosaic. The UI is almost completely absent — just photographs.</p>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px;">
+    <p style="font-size: 13px; color: var(--text-tertiary);">Click the tabs above to see each direction as a full mockup.</p>
+  </div>
+</section>
+
+<!-- DIRECTION A: TIGHT -->
+<section id="desktop-a" class="section dir-a">
+  <div class="section-header">
+    <span class="label">Direction A</span>
+    <h2>Tight & Lively</h2>
+    <p>12px grid gaps. Centered header. Scale-on-hover. Dense photo coverage with interactive energy. Hover any photo below.</p>
+  </div>
+
+  <div class="mockup-frame">
+    <div class="gallery-header">
+      <h1>photos.bdailey.com</h1>
+    </div>
+    <div class="masonry">
+      <div class="photo-placeholder ph-1" style="height:240px"></div>
+      <div class="photo-placeholder ph-2" style="height:180px"></div>
+      <div class="photo-placeholder ph-3" style="height:300px"></div>
+      <div class="photo-placeholder ph-4" style="height:200px"></div>
+      <div class="photo-placeholder ph-5" style="height:260px"></div>
+      <div class="photo-placeholder ph-6" style="height:220px"></div>
+      <div class="photo-placeholder ph-7" style="height:280px"></div>
+      <div class="photo-placeholder ph-8" style="height:190px"></div>
+      <div class="photo-placeholder ph-9" style="height:250px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECTION B: SPACIOUS -->
+<section id="desktop-b" class="section dir-b">
+  <div class="section-header">
+    <span class="label">Direction B</span>
+    <h2>Spacious & Subtle</h2>
+    <p>20px grid gaps. Left-aligned header with subtitle. Brightness hover effect — photos dim slightly until hovered. Hover any photo below.</p>
+  </div>
+
+  <div class="mockup-frame">
+    <div class="gallery-header">
+      <h1>photos.bdailey.com</h1>
+      <div class="subtitle">Travel & landscape photography by Bryan Dailey</div>
+    </div>
+    <div class="masonry">
+      <div class="photo-placeholder ph-1" style="height:240px"></div>
+      <div class="photo-placeholder ph-2" style="height:180px"></div>
+      <div class="photo-placeholder ph-3" style="height:300px"></div>
+      <div class="photo-placeholder ph-4" style="height:200px"></div>
+      <div class="photo-placeholder ph-5" style="height:260px"></div>
+      <div class="photo-placeholder ph-6" style="height:220px"></div>
+      <div class="photo-placeholder ph-7" style="height:280px"></div>
+      <div class="photo-placeholder ph-8" style="height:190px"></div>
+      <div class="photo-placeholder ph-9" style="height:250px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECTION C: MINIMAL -->
+<section id="desktop-c" class="section dir-c">
+  <div class="section-header">
+    <span class="label">Direction C</span>
+    <h2>Ultra-Minimal</h2>
+    <p>8px grid gaps. Uppercase micro-header. No hover effects. Maximum density — the photos are a near-seamless mosaic.</p>
+  </div>
+
+  <div class="mockup-frame">
+    <div class="gallery-header">
+      <h1>photos.bdailey.com</h1>
+    </div>
+    <div class="masonry">
+      <div class="photo-placeholder ph-1" style="height:240px"></div>
+      <div class="photo-placeholder ph-2" style="height:180px"></div>
+      <div class="photo-placeholder ph-3" style="height:300px"></div>
+      <div class="photo-placeholder ph-4" style="height:200px"></div>
+      <div class="photo-placeholder ph-5" style="height:260px"></div>
+      <div class="photo-placeholder ph-6" style="height:220px"></div>
+      <div class="photo-placeholder ph-7" style="height:280px"></div>
+      <div class="photo-placeholder ph-8" style="height:190px"></div>
+      <div class="photo-placeholder ph-9" style="height:250px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MOBILE -->
+<section id="mobile" class="section">
+  <div class="section-header">
+    <span class="label">Mobile</span>
+    <h2>Single-Column Feed</h2>
+    <p>Full-width photos, edge-to-edge. Each image gets its own moment — the Instagram pattern. This is consistent across all three directions.</p>
+  </div>
+
+  <div class="mobile-frame">
+    <div class="mobile-header">
+      <h1>photos.bdailey.com</h1>
+    </div>
+    <div class="mobile-feed">
+      <div class="photo-placeholder ph-1" style="height:250px"></div>
+      <div class="photo-placeholder ph-3" style="height:200px"></div>
+      <div class="photo-placeholder ph-5" style="height:280px"></div>
+      <div class="photo-placeholder ph-7" style="height:220px"></div>
+      <div class="photo-placeholder ph-2" style="height:190px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX VARIATIONS -->
+<section id="lightbox" class="section">
+  <div class="section-header">
+    <span class="label">Lightbox</span>
+    <h2>EXIF Presentation Variations</h2>
+    <p>Three approaches to displaying EXIF metadata in the lightbox. The photo is always the hero — EXIF is subordinate.</p>
+  </div>
+
+  <div class="compare-grid">
+    <!-- Below Photo -->
+    <div class="compare-item">
+      <span class="label">Option 1: Below</span>
+      <h3>EXIF Below Photo</h3>
+      <p class="desc">Clean, centered. Photo stands alone. EXIF appears as a quiet footnote. Works identically on mobile and desktop.</p>
+      <div class="lightbox-mockup" style="margin-top: 12px;">
+        <div class="lb-below" style="position: relative;">
+          <div class="photo-area photo-placeholder ph-1"></div>
+          <div class="exif-area">
+            <div class="photo-title">Amalfi Coastline at Sunset</div>
+            <div class="exif-row">Sony A7IV &nbsp;·&nbsp; 24-70mm &nbsp;·&nbsp; ƒ/8 &nbsp;·&nbsp; 1/250s &nbsp;·&nbsp; ISO 100</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="compare-item">
+      <span class="label">Option 2: Side Panel</span>
+      <h3>EXIF in Side Panel</h3>
+      <p class="desc">Desktop: EXIF in a right panel. Mobile: collapses to below-photo layout. More structured, gallery-exhibition feel.</p>
+      <div class="lightbox-mockup" style="margin-top: 12px;">
+        <div class="lb-side">
+          <div class="photo-area photo-placeholder ph-3"></div>
+          <div class="exif-panel">
+            <div class="photo-title">Amalfi Coastline at Sunset</div>
+            <div class="exif-item">
+              <div class="exif-label">Camera</div>
+              <div class="exif-value">Sony A7IV</div>
+            </div>
+            <div class="exif-item">
+              <div class="exif-label">Lens</div>
+              <div class="exif-value">24-70mm</div>
+            </div>
+            <div class="exif-item">
+              <div class="exif-label">Settings</div>
+              <div class="exif-value">ƒ/8 · 1/250s · ISO 100</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Minimal Inline -->
+    <div class="compare-item">
+      <span class="label">Option 3: Minimal Inline</span>
+      <h3>Single-Line EXIF</h3>
+      <p class="desc">Maximum photo space. EXIF compressed to one subtle line. Nearly invisible until you look for it. No title displayed.</p>
+      <div class="lightbox-mockup" style="margin-top: 12px;">
+        <div class="lb-minimal">
+          <div class="photo-area photo-placeholder ph-5"></div>
+          <div class="exif-inline">
+            Sony A7IV<span>·</span>24-70mm<span>·</span>ƒ/8<span>·</span>1/250s<span>·</span>ISO 100
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOVER FX -->
+<section id="hover" class="section">
+  <div class="section-header">
+    <span class="label">Interaction</span>
+    <h2>Hover Effects Comparison</h2>
+    <p>Desktop-only enhancement. Hover each card to see the effect in action.</p>
+  </div>
+
+  <div class="hover-demo">
+    <div class="hover-card">
+      <div class="photo-placeholder ph-1 hover-scale" style="height:120px; border-radius: 2px;"></div>
+      <div class="hover-label">Scale (Direction A)</div>
+      <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Photo grows slightly. Feels alive and interactive.</div>
+    </div>
+    <div class="hover-card">
+      <div class="photo-placeholder ph-3 hover-brightness" style="height:120px; border-radius: 2px;"></div>
+      <div class="hover-label">Brightness (Direction B)</div>
+      <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Non-hovered photos dim. Quiet spotlight effect.</div>
+    </div>
+    <div class="hover-card">
+      <div class="photo-placeholder ph-5 hover-none" style="height:120px; border-radius: 2px;"></div>
+      <div class="hover-label">None (Direction C)</div>
+      <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Static grid. Maximum stillness and calm.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<section id="summary" class="section">
+  <div class="section-header">
+    <span class="label">Decision</span>
+    <h2>Design Direction Summary</h2>
+    <p>Side-by-side comparison of all variations. Mix and match elements from different directions.</p>
+  </div>
+
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Element</th>
+        <th>Direction A: Tight</th>
+        <th>Direction B: Spacious</th>
+        <th>Direction C: Minimal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Grid Gap</td>
+        <td>12px</td>
+        <td>20px</td>
+        <td>8px</td>
+      </tr>
+      <tr>
+        <td>Header</td>
+        <td>Centered, 18px light</td>
+        <td>Left-aligned + subtitle</td>
+        <td>Centered, 14px uppercase</td>
+      </tr>
+      <tr>
+        <td>Hover FX</td>
+        <td>Scale 1.03</td>
+        <td>Brightness lift</td>
+        <td>None</td>
+      </tr>
+      <tr>
+        <td>Feeling</td>
+        <td>Dense, energetic, interactive</td>
+        <td>Airy, refined, curated</td>
+        <td>Seamless, silent, maximum photo</td>
+      </tr>
+      <tr>
+        <td>Best For</td>
+        <td>Large collections, engagement</td>
+        <td>Curated portfolios, craft</td>
+        <td>Letting photos speak entirely</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="max-width: 900px; margin: 32px auto 0; padding: 20px; background: rgba(36,40,59,0.3); border-radius: 8px; border: 1px solid rgba(86,95,137,0.15);">
+    <div style="font-size: 13px; color: var(--text-primary); margin-bottom: 8px; font-weight: 400;">Sally's Recommendation</div>
+    <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+      <strong style="color: var(--text-primary);">Direction A (Tight)</strong> as the base with <strong style="color: var(--text-primary);">Lightbox Option 1 (Below)</strong>. The 12px gap and scale hover best serve "the grid is the product" — dense enough to show breadth, interactive enough to feel alive. The centered header keeps things symmetric and clean. EXIF below the photo is the simplest, most responsive approach — works identically on all devices with no layout gymnastics.
+    </div>
+  </div>
+</section>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+</script>
+
+</body>
+</html>

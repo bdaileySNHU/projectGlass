@@ -1,0 +1,37 @@
+[
+  {
+    "id": "amalfi-coast",
+    "src": "/photos/amalfi-coast.jpg",
+    "width": 4000,
+    "height": 2667,
+    "alt": "Amalfi coastline at golden hour",
+    "title": "Amalfi Coast",
+    "exif": {
+      "camera": "Sony A7IV",
+      "lens": "24-70mm f/2.8 GM",
+      "focalLength": "35mm",
+      "aperture": "f/8",
+      "shutterSpeed": "1/250s",
+      "iso": "100"
+    }
+  },
+  {
+    "id": "porto-bridge",
+    "src": "/photos/porto-bridge.jpg",
+    "width": 3000,
+    "height": 4000,
+    "alt": "Dom Luís I Bridge in Porto at dusk",
+    "title": "Porto Bridge"
+  },
+  {
+    "id": "tokyo-street",
+    "src": "/photos/tokyo-street.jpg",
+    "width": 5000,
+    "height": 3333,
+    "alt": "Neon-lit alley in Shinjuku at night",
+    "exif": {
+      "camera": "Sony A7IV",
+      "aperture": "f/2.8"
+    }
+  }
+]
