@@ -1,37 +1,62 @@
 [
   {
-    "id": "amalfi-coast",
-    "src": "/photos/amalfi-coast.jpg",
-    "width": 4000,
-    "height": 2667,
-    "alt": "Amalfi coastline at golden hour",
-    "title": "Amalfi Coast",
+    "id": "donald-duck",
+    "src": "/photos/donald-duck.jpeg",
+    "width": 5425,
+    "height": 3616,
+    "alt": "Donald Duck event at Tokyo Disneyland",
+    "title": "Donald Duck",
     "exif": {
-      "camera": "Sony A7IV",
+      "camera": "Nikon Zf",
       "lens": "24-70mm f/2.8 GM",
-      "focalLength": "35mm",
-      "aperture": "f/8",
-      "shutterSpeed": "1/250s",
-      "iso": "100"
+      "focalLength": "41mm",
+      "aperture": "f/4.5",
+      "shutterSpeed": "1/30s"
     }
   },
   {
-    "id": "porto-bridge",
-    "src": "/photos/porto-bridge.jpg",
-    "width": 3000,
-    "height": 4000,
-    "alt": "Dom Luís I Bridge in Porto at dusk",
-    "title": "Porto Bridge"
+    "id": "frozen-tokyo",
+    "src": "/photos/frozen-tokyo.jpeg",
+    "width": 5802,
+    "height": 3866,
+    "alt": "Frozen Kingdom at Tokyo DisneySea Fantasy Springs",
+    "title": "Frozen Kingdom",
+    "exif": {
+      "camera": "Nikon Zf",
+      "lens": "NIKKOR Z 24-70mm f/4 S",
+      "focalLength": "24mm",
+      "aperture": "f/4.0",
+      "shutterSpeed": "1/100s"
+    }
   },
   {
-    "id": "tokyo-street",
-    "src": "/photos/tokyo-street.jpg",
-    "width": 5000,
-    "height": 3333,
-    "alt": "Neon-lit alley in Shinjuku at night",
+    "id": "small-world-tokyo",
+    "src": "/photos/small-world-tokyo.jpeg",
+    "width": 8716,
+    "height": 3457,
+    "alt": "It's a Small World at Tokyo Disneyland",
+    "title": "It's a Small World",
     "exif": {
-      "camera": "Sony A7IV",
-      "aperture": "f/2.8"
+      "camera": "Nikon Zf",
+      "lens": "NIKKOR Z 24-70mm f/4 S",
+      "focalLength": "35mm",
+      "aperture": "f/5.6",
+      "shutterSpeed": "1/60s"
+    }
+  },
+  {
+    "id": "tangled",
+    "src": "/photos/tangled.jpeg",
+    "width": 5239,
+    "height": 3492,
+    "alt": "Rapunzel's Forest at Tokyo DisneySea Fantasy Springs",
+    "title": "Rapunzel's Forest",
+    "exif": {
+      "camera": "Nikon Zf",
+      "lens": "NIKKOR Z 24-70mm f/4 S",
+      "focalLength": "24mm",
+      "aperture": "f/4.0",
+      "shutterSpeed": "1/125s"
     }
   }
 ]
