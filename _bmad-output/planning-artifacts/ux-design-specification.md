@@ -545,6 +545,27 @@ flowchart TD
 
 ### Custom Components
 
+#### Category Filter (Epic 5)
+
+**Purpose:** Provide a minimal, non-distracting way to filter the photo collection by theme.
+**Placement:** Horizontal row, centered below the Page Header and above the Gallery Grid.
+
+**Styling:**
+- **Typography:** Inter, `text-xs` (12px), `font-light`, `tracking-widest`, `uppercase`.
+- **Colors:** 
+    - Inactive: `#a9b1d6` (Secondary Text)
+    - Active: `#7aa2f7` (Soft Blue Accent) with a subtle `border-b-2 border-[#7aa2f7]` offset by `pb-1`.
+    - Hover: `#c0caf5` (Primary Text) with `transition: color 0.2s ease`.
+- **Spacing:** `gap-6` between category labels. Vertical margin `mb-8` above the grid.
+
+**Responsive Behavior:**
+- **Mobile (<640px):** Horizontally scrollable row (`overflow-x-auto`) with `scrollbar-hide`. Edge-to-edge with `px-4` padding.
+- **Tablet/Desktop:** Centered flex row.
+
+**Interaction:**
+- Clicking a category triggers an instant client-side filter of the `photos` array.
+- The Gallery Grid uses a simple CSS fade (`opacity`) transition to prevent jarring layout jumps during the filter change.
+
 #### Gallery Grid
 
 **Purpose:** Display all photos in a responsive layout that serves as the entire browsing experience.

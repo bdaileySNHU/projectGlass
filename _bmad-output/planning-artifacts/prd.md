@@ -2,11 +2,16 @@
 stepsCompleted: ['step-01-init', 'step-02-discovery', 'step-03-success', 'step-04-journeys', 'step-05-domain', 'step-06-innovation', 'step-07-project-type', 'step-08-scoping', 'step-09-functional', 'step-10-nonfunctional', 'step-11-polish', 'step-12-complete']
 inputDocuments: []
 workflowType: 'prd'
+workflow: 'edit'
 classification:
   projectType: web_app
   domain: general
   complexity: low
   projectContext: greenfield
+lastEdited: '2026-02-13'
+editHistory:
+  - date: '2026-02-13'
+    changes: 'Added Phase 2 Photo Organization requirements (FR20-FR26): two-dimensional tagging (Location + Genre), multi-tag filtering, filter persistence. Extended Journey 1 with return visit filtering scene. Updated FR17, Phase 2 scope, and success criteria.'
 ---
 
 # Product Requirements Document - projectGlass
@@ -54,6 +59,7 @@ classification:
 - Page load < 2 seconds (real browser measurement)
 - Adding a new photo takes under 2 minutes (drop file + edit JSON)
 - Zero runtime errors in production console at launch
+- Visitor can narrow the gallery to a specific subset (e.g., Japan street photography) in 2 or fewer interactions
 
 ## User Journeys
 
@@ -69,7 +75,9 @@ classification:
 
 **Resolution:** She texts Bryan "your photos are incredible" and shares the link with a friend. Total time on site: 3 minutes.
 
-**Requirements revealed:** Fast load, compelling masonry overview, below-the-fold indication, distraction-free lightbox, EXIF display, mobile-first responsive.
+**Return Visit:** A week later, Sarah opens the link again — this time she wants to find the Japan photos Bryan mentioned. She spots filter controls at the top of the gallery. She taps "Japan" under Location and the grid instantly narrows to just those shots. She then taps "Street" under Genre to drill further — now she's looking at Bryan's Tokyo street photography. She opens the lightbox, swipes through several photos, closes it, and the filters are still active. She switches to "Landscape" and browses a completely different set from the same trip.
+
+**Requirements revealed (return visit):** Location and Genre tag dimensions, multi-tag filtering, combinable filters, instant grid re-render on filter change, filter state persists across lightbox open/close, clear filter reset path.
 
 ### Journey 2: The Visitor Edge Case — "Sarah on Slow Airport Wi-Fi"
 
@@ -107,6 +115,9 @@ classification:
 | Simple JSON data schema | Journey 3 |
 | File-system content management | Journey 3 |
 | Git-push auto-deploy (Vercel) | Journey 3 |
+| Location and Genre tag dimensions | Journey 1 (return visit) |
+| Combinable multi-dimension filtering | Journey 1 (return visit) |
+| Filter state persists across lightbox | Journey 1 (return visit) |
 
 ## Web App Specific Requirements
 
@@ -185,8 +196,7 @@ Single-page statically generated (SSG) photo gallery. No client-side routing for
 
 ### Phase 2 (Growth)
 
-- Photo categories and albums
-- Search and filter
+- **Photo Tagging and Filtering:** Two-dimensional tag system — Location tags (e.g., "Japan", "Portugal", "NYC") and Genre tags (e.g., "Street", "Landscape", "Architecture"). Photos support multiple tags per dimension. Every photo requires at least one tag. Visitors filter the gallery by selecting tags, with combinable cross-dimension filtering. Designed to scale from <100 to 1000+ photos.
 - Keyboard/swipe navigation in lightbox
 - Print inquiry form
 - Analytics integration
@@ -241,9 +251,19 @@ Single-page statically generated (SSG) photo gallery. No client-side routing for
 ### Content Management
 
 - FR16: Site owner can add new photos by placing image files in the designated directory
-- FR17: Site owner can define photo metadata (title, alt text, dimensions, EXIF) in a JSON data file
+- FR17: Site owner can define photo metadata (title, alt text, dimensions, EXIF, location tags, genre tags) in a JSON data file
 - FR18: Site owner can publish updates by pushing to the main branch (auto-deploy)
 - FR19: Site owner can remove or reorder photos by editing the JSON data file
+
+### Photo Organization (Phase 2)
+
+- FR20: Site owner can assign one or more Location tags (e.g., "Japan", "Portugal") to each photo via the JSON data file
+- FR21: Site owner can assign one or more Genre tags (e.g., "Street", "Landscape") to each photo via the JSON data file
+- FR22: Every photo in the collection has at least one Location or Genre tag assigned
+- FR23: Visitor can filter the gallery grid by selecting a Location tag
+- FR24: Visitor can filter the gallery grid by selecting a Genre tag
+- FR25: Visitor can combine Location and Genre filters to narrow results (e.g., "Japan" + "Street")
+- FR26: Active filters persist when the visitor opens and closes the lightbox
 
 ## Non-Functional Requirements
 

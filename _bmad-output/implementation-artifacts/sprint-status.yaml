@@ -1,4 +1,4 @@
-# generated: 2026-02-10
+# generated: 2026-02-13
 # project: projectGlass
 # project_key: NOKEY
 # tracking_system: file-system
@@ -33,7 +33,7 @@
 # - SM typically creates next story after previous one is 'done' to incorporate learnings
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
-generated: 2026-02-10
+generated: 2026-02-13
 project: projectGlass
 project_key: NOKEY
 tracking_system: file-system
@@ -59,3 +59,24 @@ development_status:
   epic-4: done
   4-1-production-build-and-vps-deployment: done
   epic-4-retrospective: optional
+
+  epic-5: in-progress
+  5-1-metadata-extraction-script: done
+  5-2-smart-merge-and-sync: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-extend-data-schema-for-tags: backlog
+  6-2-category-filter-ui: backlog
+  6-3-gallery-filtering-logic: backlog
+  epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-keyboard-and-swipe-navigation: backlog
+  7-2-markdown-support-for-photo-narratives: backlog
+  epic-7-retrospective: optional
+
+  epic-8: backlog
+  8-1-print-inquiry-action: backlog
+  8-2-privacy-first-analytics: backlog
+  epic-8-retrospective: optional

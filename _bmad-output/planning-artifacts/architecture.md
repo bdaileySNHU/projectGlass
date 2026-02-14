@@ -8,6 +8,10 @@ completedAt: '2026-02-10'
 project_name: 'projectGlass'
 user_name: 'Bryan'
 date: '2026-02-10'
+lastEdited: '2026-02-13'
+editHistory:
+  - date: '2026-02-13'
+    changes: 'Phase 2 extension — added PhotoTags interface, CategoryFilter component, filter state management in Gallery, FR20-FR26 coverage. Decisions: structured tags object, Gallery owns all state, pure client state filtering, instant swap rendering.'
 ---
 
 # Architecture Decision Document
@@ -226,6 +230,11 @@ interface ExifData {
   iso?: string;         // "100"
 }
 
+interface PhotoTags {
+  location: string[];   // ["Japan", "Tokyo"] — title case, displayed as-is
+  genre: string[];      // ["Street", "Architecture"] — title case, displayed as-is
+}
+
 interface Photo {
   src: string;          // "/photos/amalfi-coast.jpg"
   width: number;        // 4000 (original px — needed for aspect ratio)
@@ -233,6 +242,7 @@ interface Photo {
   alt: string;          // "Amalfi coastline at golden hour"
   title?: string;       // "Amalfi Coast" (shown in lightbox, optional)
   exif?: ExifData;      // Optional EXIF block
+  tags: PhotoTags;      // Required — at least one value across both arrays (Phase 2)
 }
 ```
 
@@ -243,6 +253,9 @@ interface Photo {
 - All EXIF fields are strings — displayed exactly as written. No parsing or formatting logic.
 - `width`/`height` are original image dimensions — Next.js uses these for aspect ratio, preventing CLS
 - Array order in JSON = display order in grid
+- `tags` is required (Phase 2) — every photo must have at least one Location or Genre tag
+- Tags use title case as-is — no normalization layer. What Bryan types in JSON is what visitors see.
+- Two dimensions (Location, Genre) grouped under `tags` object for clean separation and future extensibility
 
 **Sample Data:**
 
@@ -254,6 +267,10 @@ interface Photo {
     "height": 2667,
     "alt": "Amalfi coastline at golden hour",
     "title": "Amalfi Coast",
+    "tags": {
+      "location": ["Italy", "Amalfi Coast"],
+      "genre": ["Landscape"]
+    },
     "exif": {
       "camera": "Sony A7IV",
       "lens": "24-70mm f/2.8 GM",
@@ -282,9 +299,15 @@ No server-side endpoints for MVP. Data flows from JSON file → server component
 ### Frontend Architecture
 
 **State Management:**
-- React `useState` only. One piece of state: `selectedPhotoIndex: number | null`
-- No global state library. No context providers. No reducers.
-- The Gallery component owns lightbox state. `page.tsx` is a thin shell.
+- React `useState` only. No global state library. No context providers. No reducers.
+- The Gallery component owns all client-side state. `page.tsx` is a thin shell.
+- **MVP state:** `selectedPhotoIndex: number | null`
+- **Phase 2 state (filtering):**
+  - `activeLocation: string | null` — currently selected Location filter (`null` = "All")
+  - `activeGenre: string | null` — currently selected Genre filter (`null` = "All")
+  - `filteredPhotos: Photo[]` — derived via `useMemo` from full photos array + active filters
+  - Unique tag lists (all locations, all genres) derived via `useMemo` on mount — computed once since photos come from server props
+- Filter state is pure client state — no URL params, resets on page reload. Filters persist across lightbox open/close because Gallery never unmounts.
 
 **Component Architecture:**
 
@@ -295,11 +318,12 @@ src/
     page.tsx          — Home page (loads JSON, renders header + gallery)
     globals.css       — Tailwind directives + Tokyo Night @theme
   components/
-    Gallery.tsx       — Grid/feed + lightbox integration (owns state)
+    Gallery.tsx       — Grid/feed + lightbox integration (owns all client state)
     PhotoCard.tsx     — Individual photo in grid (Next.js Image + hover)
+    CategoryFilter.tsx — Location/Genre tag filter controls (Phase 2)
     Header.tsx        — Site title
   types/
-    photo.ts          — Photo & ExifData interfaces
+    photo.ts          — Photo, ExifData, & PhotoTags interfaces
 data/
   photos.json         — Photo metadata
 public/
@@ -307,7 +331,8 @@ public/
 ```
 
 **Key Decisions:**
-- `Gallery.tsx` is a client component (`"use client"`) — it manages lightbox state and user interactions
+- `Gallery.tsx` is a client component (`"use client"`) — it manages lightbox state, filter state, and user interactions
+- `CategoryFilter.tsx` is rendered within Gallery (client boundary) — receives tag lists and active filters as props, fires callbacks on selection
 - `PhotoCard.tsx` is rendered within Gallery — receives photo data as props
 - `Header.tsx` can be a server component — no interactivity
 - `page.tsx` is a server component — reads JSON, passes data to Gallery
@@ -404,7 +429,8 @@ Covered in Starter Template Evaluation section. Key decisions:
 | `layout.tsx` | Server | No interactivity — sets up HTML structure |
 | `page.tsx` | Server | Reads JSON data, passes to children |
 | `Header.tsx` | Server | No interactivity — pure render |
-| `Gallery.tsx` | **Client** (`"use client"`) | Manages lightbox state, handles clicks |
+| `Gallery.tsx` | **Client** (`"use client"`) | Manages lightbox state, filter state, handles interactions |
+| `CategoryFilter.tsx` | Client | Rendered within Gallery (client boundary), handles filter selection |
 | `PhotoCard.tsx` | Client | Rendered within Gallery (client boundary), handles hover |
 
 **Rule:** Only add `"use client"` where interactivity requires it. Gallery is the client boundary — everything inside it is client. Everything outside stays server.
@@ -482,6 +508,9 @@ All styling via Tailwind utility classes in JSX. The only CSS file is `globals.c
 5. Follow mobile-first responsive pattern
 6. Use Tokyo Night theme variables — never hardcoded hex colors
 7. Match JSON field names to TypeScript interface fields exactly
+8. Use title case for tag values in `photos.json` — displayed as-is with no transformation
+9. Keep filter state in Gallery.tsx — do not lift to page.tsx or create context providers
+10. CategoryFilter receives data via props from Gallery — no direct data access
 
 **Anti-Patterns to Avoid:**
 - Creating new files not in the defined project structure
@@ -489,7 +518,9 @@ All styling via Tailwind utility classes in JSX. The only CSS file is `globals.c
 - Installing additional npm packages without architectural review
 - Creating API routes (`app/api/`) — this is a static-first app
 - Using `useEffect` for data loading — data comes from server component props
-- Adding global state management (Redux, Zustand, Context) — one `useState` is sufficient
+- Adding global state management (Redux, Zustand, Context) — `useState` + `useMemo` in Gallery is sufficient
+- Adding URL-based filter state (query params, useSearchParams) — pure client state for now
+- Adding virtualized rendering for filtering — instant swap with opacity transition is sufficient at current scale
 
 ## Project Structure & Boundaries
 
@@ -528,7 +559,7 @@ project-glass/
         └── photo.ts              # Photo & ExifData interfaces
 ```
 
-10 source files + data + images. No more, no less.
+11 source files + data + images (10 MVP + CategoryFilter.tsx for Phase 2).
 
 ### Architectural Boundaries
 
@@ -538,9 +569,10 @@ project-glass/
 Server Boundary                    Client Boundary
 ─────────────────                  ─────────────────
 layout.tsx                         Gallery.tsx ("use client")
-  └── page.tsx                       ├── PhotoCard.tsx
-        ├── Header.tsx               └── Lightbox (from library)
-        └── Gallery.tsx ─────────→ (client boundary starts here)
+  └── page.tsx                       ├── CategoryFilter.tsx (Phase 2)
+        ├── Header.tsx               ├── PhotoCard.tsx
+        └── Gallery.tsx ─────────→   └── Lightbox (from library)
+                                   (client boundary starts here)
 ```
 
 - `page.tsx` reads `data/photos.json` via `fs` (server-side only)
@@ -551,11 +583,13 @@ layout.tsx                         Gallery.tsx ("use client")
 **Data Boundary:**
 
 ```
-data/photos.json → fs.readFileSync (server) → page.tsx → Gallery (props) → PhotoCard (props)
-                                                                         → Lightbox (props)
+data/photos.json → fs.readFileSync (server) → page.tsx → Gallery (props: Photo[])
+                                                           ├── useMemo → unique tags → CategoryFilter (props)
+                                                           ├── useMemo → filteredPhotos → PhotoCard[] (props)
+                                                           └── filteredPhotos → Lightbox (props)
 ```
 
-One-way data flow. No mutations. No client-side data fetching.
+One-way data flow. No mutations. No client-side data fetching. Filtering is a pure client-side derivation from the full photo array.
 
 ### Requirements to Structure Mapping
 
@@ -566,6 +600,7 @@ One-way data flow. No mutations. No client-side data fetching.
 | Photo Metadata (FR10-11) | `photo.ts` (schema), `Gallery.tsx` (Captions plugin) |
 | Image Optimization (FR12-15) | `PhotoCard.tsx` (Next.js `<Image>`), `next.config.js` |
 | Content Management (FR16-19) | `data/photos.json`, `public/photos/` |
+| Photo Organization (FR20-26) | `photo.ts` (PhotoTags), `CategoryFilter.tsx`, `Gallery.tsx` (filter state + useMemo), `data/photos.json` (tags data) |
 
 | NFR | Files |
 |-----|-------|
@@ -666,7 +701,7 @@ TLS via Let's Encrypt / certbot.
 
 ### Requirements Coverage Validation
 
-**Functional Requirements — All 19 Covered:**
+**Functional Requirements — All 26 Covered (FR1-19 MVP, FR20-26 Phase 2):**
 
 | FR Category | FRs | Architectural Support |
 |-------------|-----|----------------------|
@@ -675,6 +710,9 @@ TLS via Let's Encrypt / certbot.
 | Photo Metadata | FR10-11 | photo.ts (optional ExifData interface), Captions plugin, conditional rendering |
 | Image Optimization | FR12-15 | Next.js Image (WebP/AVIF, srcset), sizes attribute, width/height for CLS |
 | Content Management | FR16-19 | data/photos.json + public/photos/, array order = display order, git push deploy |
+| Photo Organization | FR20-22 | photo.ts (PhotoTags interface, tags required), photos.json (location/genre arrays) |
+| Filtering | FR23-25 | CategoryFilter.tsx (UI), Gallery.tsx (useMemo filtering, combinable Location + Genre) |
+| Filter Persistence | FR26 | Gallery.tsx state persists across lightbox open/close (component never unmounts) |
 
 **Non-Functional Requirements — All 7 Covered:**
 
