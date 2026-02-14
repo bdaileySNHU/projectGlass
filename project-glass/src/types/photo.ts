@@ -7,6 +7,11 @@ export interface ExifData {
   iso?: string;         // "100"
 }
 
+export interface PhotoTags {
+  location: string[];   // ["Japan", "Tokyo"] — title case, displayed as-is
+  genre: string[];      // ["Street", "Architecture"] — title case, displayed as-is
+}
+
 export interface Photo {
   id: string;           // Unique identifier for React keys and routing
   src: string;          // "/photos/amalfi-coast.jpg"
@@ -15,5 +20,6 @@ export interface Photo {
   alt: string;          // "Amalfi coastline at golden hour"
   title?: string;       // "Amalfi Coast" (shown in lightbox, optional)
   exif?: ExifData;      // Optional EXIF block
+  tags: PhotoTags;      // Required (Phase 2)
   priority?: boolean;   // If true, Next.js Image will prioritize loading (LCP)
 }
