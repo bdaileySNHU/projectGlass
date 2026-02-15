@@ -58,5 +58,84 @@
       "aperture": "f/4.0",
       "shutterSpeed": "1/125s"
     }
+  },
+  {
+    "id": "kyoto-cherry-blossom",
+    "src": "/photos/kyoto-cherry-blossom.jpg",
+    "width": 3826,
+    "height": 5741,
+    "alt": "",
+    "title": "",
+    "tags": {
+      "location": [],
+      "genre": []
+    },
+    "exif": {
+      "camera": "NIKON CORPORATION NIKON Z f",
+      "lens": "NIKKOR Z 24-70mm f/4 S",
+      "focalLength": "70mm",
+      "aperture": "f/8",
+      "shutterSpeed": "1/160s",
+      "iso": "100"
+    }
+  },
+  {
+    "id": "kyoto-leaf",
+    "src": "/photos/kyoto-leaf.jpg",
+    "width": 2826,
+    "height": 4240,
+    "alt": "",
+    "title": "",
+    "tags": {
+      "location": [],
+      "genre": []
+    },
+    "exif": {
+      "camera": "NIKON CORPORATION NIKON Z f",
+      "lens": "NIKKOR Z 24-70mm f/4 S",
+      "focalLength": "70mm",
+      "aperture": "f/8",
+      "shutterSpeed": "1/250s",
+      "iso": "100"
+    }
+  },
+  {
+    "id": "mt-fuji",
+    "src": "/photos/mt-fuji.jpeg",
+    "width": 5099,
+    "height": 3579,
+    "alt": "",
+    "title": "",
+    "tags": {
+      "location": [],
+      "genre": []
+    },
+    "exif": {
+      "camera": "NIKON CORPORATION NIKON Z f",
+      "lens": "NIKKOR Z 24-70mm f/4 S",
+      "focalLength": "70mm",
+      "aperture": "f/4",
+      "shutterSpeed": "1/2000s",
+      "iso": "140"
+    }
+  },
+  {
+    "id": "portland-headlight",
+    "src": "/photos/portland-headlight.jpeg",
+    "width": 5978,
+    "height": 3978,
+    "alt": "",
+    "title": "",
+    "tags": {
+      "location": [],
+      "genre": []
+    },
+    "exif": {
+      "camera": "NIKON CORPORATION NIKON D5300",
+      "focalLength": "26mm",
+      "aperture": "f/13",
+      "shutterSpeed": "1/250s",
+      "iso": "200"
+    }
   }
 ]
