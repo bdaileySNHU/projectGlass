@@ -62,7 +62,7 @@ development_status:
 
   epic-5: in-progress
   5-1-metadata-extraction-script: done
-  5-2-smart-merge-and-sync: backlog
+  5-2-smart-merge-and-sync: done
   epic-5-retrospective: optional
 
   epic-6: backlog

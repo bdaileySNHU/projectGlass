@@ -132,20 +132,105 @@ export async function buildPhotoEntry(filePath: string, filename: string): Promi
   }
 }
 
+/** Curated fields that must never be overwritten by automation */
+const CURATED_FIELDS = ['alt', 'title', 'tags', 'priority'] as const;
+
+/**
+ * Merge fresh disk data into an existing photo entry.
+ * - Curated fields (alt, title, tags, priority) are NEVER overwritten.
+ * - Technical fields (width, height, exif.*) are backfilled only if missing/empty.
+ * - Adds tags scaffold if missing entirely.
+ * Returns the merged entry and whether any changes were made.
+ */
+export function mergeExistingEntry(
+  existing: Photo,
+  freshExif: ExifData,
+  freshDimensions: { width: number; height: number } | null
+): { merged: Photo; changed: boolean } {
+  let changed = false;
+  const merged = { ...existing };
+
+  // Ensure tags scaffold exists
+  if (!merged.tags) {
+    merged.tags = { location: [], genre: [] };
+    changed = true;
+  }
+
+  // Backfill dimensions if missing
+  if (freshDimensions) {
+    if (!merged.width) {
+      merged.width = freshDimensions.width;
+      changed = true;
+    }
+    if (!merged.height) {
+      merged.height = freshDimensions.height;
+      changed = true;
+    }
+  }
+
+  // Backfill EXIF fields if missing
+  const hasAnyFreshExif = Object.values(freshExif).some(v => v !== undefined);
+  if (hasAnyFreshExif) {
+    const existingExif = merged.exif || {};
+    const mergedExif = { ...existingExif };
+    let exifChanged = false;
+
+    for (const key of Object.keys(freshExif) as (keyof ExifData)[]) {
+      if (!mergedExif[key] && freshExif[key]) {
+        mergedExif[key] = freshExif[key];
+        exifChanged = true;
+      }
+    }
+
+    if (exifChanged) {
+      merged.exif = mergedExif;
+      changed = true;
+    }
+  }
+
+  return { merged, changed };
+}
+
 export async function syncPhotos(
   photosDir: string = PHOTOS_DIR,
   dataFile: string = DATA_FILE
-): Promise<{ added: string[]; total: number }> {
+): Promise<{ added: string[]; updated: string[]; total: number }> {
   const imageFiles = getImageFiles(photosDir);
   const existingPhotos = loadPhotosJson(dataFile);
-  const newImages = findNewImages(imageFiles, existingPhotos);
 
-  if (newImages.length === 0) {
-    console.log('No new images found.');
-    return { added: [], total: existingPhotos.length };
+  // Phase 1: Merge existing entries (backfill technical data, add tags scaffold)
+  const updatedNames: string[] = [];
+  const mergedPhotos: Photo[] = [];
+
+  for (const photo of existingPhotos) {
+    const filename = path.basename(photo.src);
+    const filePath = path.join(photosDir, filename);
+
+    if (fs.existsSync(filePath)) {
+      try {
+        const buffer = fs.readFileSync(filePath);
+        const freshDimensions = extractDimensions(buffer);
+        const freshExif = await extractExif(buffer);
+        const { merged, changed } = mergeExistingEntry(photo, freshExif, freshDimensions);
+        mergedPhotos.push(merged);
+        if (changed) {
+          updatedNames.push(filename);
+          console.log(`  ~ ${photo.src} (updated)`);
+        }
+      } catch {
+        // If we can't read the file, keep the existing entry as-is
+        mergedPhotos.push(photo);
+      }
+    } else {
+      // Image file no longer on disk — keep the entry anyway
+      mergedPhotos.push(photo);
+    }
   }
 
+  // Phase 2: Add new images
+  const newImages = findNewImages(imageFiles, existingPhotos);
   const newEntries: Photo[] = [];
+
   for (const filename of newImages) {
     const filePath = path.join(photosDir, filename);
     console.log(`Processing: ${filename}`);
@@ -155,27 +240,39 @@ export async function syncPhotos(
     }
   }
 
-  if (newEntries.length === 0) {
-    console.log('No valid new entries to add.');
-    return { added: [], total: existingPhotos.length };
+  const allPhotos = [...mergedPhotos, ...newEntries];
+
+  // Only write if there were actual changes
+  if (newEntries.length === 0 && updatedNames.length === 0) {
+    console.log('No changes needed.');
+    return { added: [], updated: [], total: existingPhotos.length };
   }
 
-  const updatedPhotos = [...existingPhotos, ...newEntries];
-  
   // Ensure directory exists
   const dataDir = path.dirname(dataFile);
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
   }
-  
-  fs.writeFileSync(dataFile, JSON.stringify(updatedPhotos, null, 2) + '\n');
 
-  console.log(`\nAdded ${newEntries.length} new photo(s). Total: ${updatedPhotos.length}`);
-  for (const entry of newEntries) {
-    console.log(`  + ${entry.src} (${entry.width}x${entry.height})`);
+  fs.writeFileSync(dataFile, JSON.stringify(allPhotos, null, 2) + '\n');
+
+  // Report
+  if (newEntries.length > 0) {
+    console.log(`\nAdded ${newEntries.length} new photo(s):`);
+    for (const entry of newEntries) {
+      console.log(`  + ${entry.src} (${entry.width}x${entry.height})`);
+    }
   }
+  if (updatedNames.length > 0) {
+    console.log(`\nUpdated ${updatedNames.length} existing photo(s).`);
+  }
+  console.log(`Total: ${allPhotos.length}`);
 
-  return { added: newEntries.map(e => path.basename(e.src)), total: updatedPhotos.length };
+  return {
+    added: newEntries.map(e => path.basename(e.src)),
+    updated: updatedNames,
+    total: allPhotos.length,
+  };
 }
 
 // CLI entry point

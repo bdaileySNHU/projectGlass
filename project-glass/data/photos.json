@@ -11,7 +11,12 @@
       "lens": "24-70mm f/2.8 GM",
       "focalLength": "41mm",
       "aperture": "f/4.5",
-      "shutterSpeed": "1/30s"
+      "shutterSpeed": "1/30s",
+      "iso": "800"
+    },
+    "tags": {
+      "location": [],
+      "genre": []
     }
   },
   {
@@ -26,7 +31,12 @@
       "lens": "NIKKOR Z 24-70mm f/4 S",
       "focalLength": "24mm",
       "aperture": "f/4.0",
-      "shutterSpeed": "1/100s"
+      "shutterSpeed": "1/100s",
+      "iso": "100"
+    },
+    "tags": {
+      "location": [],
+      "genre": []
     }
   },
   {
@@ -41,7 +51,12 @@
       "lens": "NIKKOR Z 24-70mm f/4 S",
       "focalLength": "35mm",
       "aperture": "f/5.6",
-      "shutterSpeed": "1/60s"
+      "shutterSpeed": "1/60s",
+      "iso": "3200"
+    },
+    "tags": {
+      "location": [],
+      "genre": []
     }
   },
   {
@@ -56,7 +71,12 @@
       "lens": "NIKKOR Z 24-70mm f/4 S",
       "focalLength": "24mm",
       "aperture": "f/4.0",
-      "shutterSpeed": "1/125s"
+      "shutterSpeed": "1/125s",
+      "iso": "3200"
+    },
+    "tags": {
+      "location": [],
+      "genre": []
     }
   },
   {
