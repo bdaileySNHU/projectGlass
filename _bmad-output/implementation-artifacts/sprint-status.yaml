@@ -60,12 +60,12 @@ development_status:
   4-1-production-build-and-vps-deployment: done
   epic-4-retrospective: optional
 
-  epic-5: in-progress
+  epic-5: done
   5-1-metadata-extraction-script: done
   5-2-smart-merge-and-sync: done
   epic-5-retrospective: optional
 
-  epic-6: backlog
+  epic-6: in-progress
   6-1-extend-data-schema-for-tags: backlog
   6-2-category-filter-ui: backlog
   6-3-gallery-filtering-logic: backlog
