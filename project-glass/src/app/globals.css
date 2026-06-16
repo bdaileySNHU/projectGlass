@@ -19,3 +19,22 @@ body {
 .yarl__slide_description {
   font-size: 0.75rem;
 }
+
+@keyframes poster-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.poster-fade-in {
+  animation: poster-fade-in 700ms ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster-fade-in {
+    animation: none;
+  }
+}
