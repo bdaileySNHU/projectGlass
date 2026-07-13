@@ -38,4 +38,4 @@ jobs:
           printf '%s\n' "$SSH_KEY" > deploy_key
           ssh -i deploy_key -o StrictHostKeyChecking=accept-new \
             "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
-            'cd /var/www/projectGlass && git pull --ff-only && cd project-glass && npm install && ./deploy.sh'
+            'export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"; cd /var/www/projectGlass && git pull --ff-only && cd project-glass && npm install && ./deploy.sh'
