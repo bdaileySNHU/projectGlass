@@ -17,6 +17,10 @@ interface GalleryProps {
   photos: Photo[];
 }
 
+const trackLightboxOpen = (photoId: string) => {
+  (window as { umami?: { track: (event: string, data?: Record<string, string>) => void } }).umami?.track("lightbox-open", { photo: photoId });
+};
+
 const uniqueTags = (photos: Photo[], dimension: "location" | "genre") =>
   [...new Set(photos.flatMap((p) => p.tags[dimension]))].sort();
 
@@ -53,13 +57,13 @@ export default function Gallery({ photos }: GalleryProps) {
 
   const slides = filteredPhotos.map((photo) => {
     const exifDescription = formatExif(photo.exif);
+    const subject = `Print inquiry: ${photo.title || photo.id} (${photo.id})`;
+    const mailto = `mailto:dailey.105@gmail.com?subject=${encodeURIComponent(subject)}`;
 
-    let description: ReactNode = exifDescription;
-
-    if (photo.description) {
-      description = (
-        <>
-          {exifDescription}
+    const description: ReactNode = (
+      <>
+        {exifDescription}
+        {photo.description && (
           <div className="text-sm text-text-secondary mt-2">
             <ReactMarkdown
               components={{
@@ -78,9 +82,15 @@ export default function Gallery({ photos }: GalleryProps) {
               {photo.description}
             </ReactMarkdown>
           </div>
-        </>
-      );
-    }
+        )}
+        <a
+          href={mailto}
+          className="mt-2 inline-block text-xs text-text-secondary underline transition-colors hover:text-text-primary"
+        >
+          Inquire about print
+        </a>
+      </>
+    );
 
     return {
       ...photo,
@@ -112,7 +122,10 @@ export default function Gallery({ photos }: GalleryProps) {
             image: (props, context) =>
               renderPhotoCard(props, context, context.index < 6),
           }}
-          onClick={({ index: i }) => setIndex(i)}
+          onClick={({ index: i }) => {
+            trackLightboxOpen(filteredPhotos[i].id);
+            setIndex(i);
+          }}
           defaultContainerWidth={400}
           sizes={{
             size: "1232px",
@@ -130,7 +143,7 @@ export default function Gallery({ photos }: GalleryProps) {
         close={() => setIndex(-1)}
         slides={slides}
         plugins={[Captions]}
-        captions={{ descriptionTextAlign: "center" }}
+        captions={{ descriptionTextAlign: "center", descriptionMaxLines: 12 }}
         on={{ view: ({ index: i }) => setIndex(i) }}
         controller={{ closeOnBackdropClick: true }}
         styles={{

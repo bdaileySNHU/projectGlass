@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -18,8 +19,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const umamiSrc = process.env.NEXT_PUBLIC_UMAMI_SRC;
+  const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+  const hasUmami = umamiSrc && umamiWebsiteId;
+
   return (
     <html lang="en">
+      <head>
+        {hasUmami && (
+          <Script
+            src={umamiSrc}
+            data-website-id={umamiWebsiteId}
+            strategy="lazyOnload"
+          />
+        )}
+      </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         {children}
       </body>
