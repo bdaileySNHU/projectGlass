@@ -49,6 +49,9 @@ export async function extractExif(buffer: Buffer): Promise<ExifData> {
     const camera = [data.Make, data.Model]
       .filter(Boolean)
       .join(' ')
+      .replace(/NIKON CORPORATION/i, '')
+      .replace(/^\s*NIKON\b/i, 'Nikon')
+      .replace(/^Nikon Z f$/, 'Nikon Zf')
       .replace(/\s+/g, ' ')
       .trim() || undefined;
 
