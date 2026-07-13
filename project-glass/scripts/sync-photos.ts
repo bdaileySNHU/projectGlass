@@ -14,6 +14,9 @@ const DATA_FILE = path.join(PROJECT_ROOT, 'data', 'photos.json');
 
 const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
 
+// ponytail: soft size warning only — repo-in-git works fine until ~300 photos; revisit storage then
+const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
+
 function formatShutterSpeed(exposureTime: number | undefined): string | undefined {
   if (!exposureTime) return undefined;
   if (exposureTime >= 1) return `${exposureTime}s`;
@@ -106,6 +109,13 @@ export async function buildPhotoEntry(filePath: string, filename: string): Promi
 
   try {
     const buffer = fs.readFileSync(filePath);
+
+    if (buffer.length > MAX_PHOTO_BYTES) {
+      console.warn(
+        `⚠️ ${filename} is ${(buffer.length / 1024 / 1024).toFixed(1)}MB — consider re-exporting at ~3000px / JPEG q85 before committing.`
+      );
+    }
+
     const dimensions = extractDimensions(buffer);
     const exif = await extractExif(buffer);
 
