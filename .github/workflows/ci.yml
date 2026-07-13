@@ -24,3 +24,18 @@ jobs:
       - run: npm run type-check
       - run: npm test
       - run: npm run build
+
+  deploy:
+    needs: checks
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.AUTO_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          install -m 600 /dev/null deploy_key
+          printf '%s\n' "$SSH_KEY" > deploy_key
+          ssh -i deploy_key -o StrictHostKeyChecking=accept-new \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            'cd /var/www/projectGlass && git pull --ff-only && cd project-glass && npm install && ./deploy.sh'
