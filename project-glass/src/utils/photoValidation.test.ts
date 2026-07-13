@@ -145,7 +145,7 @@ describe('validatePhotos', () => {
     });
 
     it('reports non-array location', () => {
-      const photos = [{ ...basePhoto, tags: { location: 'Tokyo' as any, genre: ['Street'] } }];
+      const photos = [{ ...basePhoto, tags: { location: 'Tokyo', genre: ['Street'] } as unknown as Photo['tags'] }];
       const assetSources = new Set(['/photos/test-photo.jpeg']);
 
       const issues = validatePhotos(photos, assetSources);
@@ -158,7 +158,7 @@ describe('validatePhotos', () => {
     });
 
     it('reports non-array genre', () => {
-      const photos = [{ ...basePhoto, tags: { location: ['Tokyo'], genre: 'Street' as any } }];
+      const photos = [{ ...basePhoto, tags: { location: ['Tokyo'], genre: 'Street' } as unknown as Photo['tags'] }];
       const assetSources = new Set(['/photos/test-photo.jpeg']);
 
       const issues = validatePhotos(photos, assetSources);
@@ -171,7 +171,7 @@ describe('validatePhotos', () => {
     });
 
     it('reports non-string elements in location array', () => {
-      const photos = [{ ...basePhoto, tags: { location: ['Tokyo', 123 as any], genre: ['Street'] } }];
+      const photos = [{ ...basePhoto, tags: { location: ['Tokyo', 123], genre: ['Street'] } as unknown as Photo['tags'] }];
       const assetSources = new Set(['/photos/test-photo.jpeg']);
 
       const issues = validatePhotos(photos, assetSources);
@@ -184,7 +184,7 @@ describe('validatePhotos', () => {
     });
 
     it('reports non-string elements in genre array', () => {
-      const photos = [{ ...basePhoto, tags: { location: ['Tokyo'], genre: ['Street', true as any] } }];
+      const photos = [{ ...basePhoto, tags: { location: ['Tokyo'], genre: ['Street', true] } as unknown as Photo['tags'] }];
       const assetSources = new Set(['/photos/test-photo.jpeg']);
 
       const issues = validatePhotos(photos, assetSources);

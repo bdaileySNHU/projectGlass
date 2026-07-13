@@ -93,7 +93,7 @@ describe('findNewImages', () => {
     const imageFiles = ['a.jpg', 'b.jpg', 'c.jpg'];
     const existingPhotos = [
       { id: 'a', src: '/photos/a.jpg', width: 100, height: 100, alt: '', tags: { location: [], genre: [] } },
-    ] as any[];
+    ] as Photo[];
 
     const newImages = findNewImages(imageFiles, existingPhotos);
     expect(newImages).toEqual(['b.jpg', 'c.jpg']);
@@ -103,7 +103,7 @@ describe('findNewImages', () => {
     const imageFiles = ['a.jpg'];
     const existingPhotos = [
       { id: 'a', src: '/photos/a.jpg', width: 100, height: 100, alt: '', tags: { location: [], genre: [] } },
-    ] as any[];
+    ] as Photo[];
 
     const newImages = findNewImages(imageFiles, existingPhotos);
     expect(newImages).toEqual([]);
@@ -270,6 +270,7 @@ describe('syncPhotos (integration)', () => {
 
     const result = await syncPhotos(tmpPhotosDir, tmpDataFile);
 
+    expect(result.updated).toContain('donald-duck.jpeg');
     const data = JSON.parse(fs.readFileSync(tmpDataFile, 'utf-8'));
     // Custom camera name preserved (not overwritten by EXIF)
     expect(data[0].exif.camera).toBe('My Custom Camera');
@@ -342,7 +343,7 @@ describe('mergeExistingEntry', () => {
   });
 
   it('adds tags scaffold when missing', () => {
-    const entryNoTags = { ...baseEntry, tags: undefined as any };
+    const entryNoTags = { ...baseEntry, tags: undefined } as Photo;
     const { merged, changed } = mergeExistingEntry(entryNoTags, {}, null);
 
     expect(changed).toBe(true);

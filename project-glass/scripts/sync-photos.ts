@@ -132,9 +132,6 @@ export async function buildPhotoEntry(filePath: string, filename: string): Promi
   }
 }
 
-/** Curated fields that must never be overwritten by automation */
-const CURATED_FIELDS = ['alt', 'title', 'tags', 'priority'] as const;
-
 /**
  * Merge fresh disk data into an existing photo entry.
  * - Curated fields (alt, title, tags, priority) are NEVER overwritten.
