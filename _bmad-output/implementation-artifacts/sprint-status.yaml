@@ -65,15 +65,15 @@ development_status:
   5-2-smart-merge-and-sync: done
   epic-5-retrospective: optional
 
-  epic-6: in-progress
-  6-1-extend-data-schema-for-tags: backlog
-  6-2-category-filter-ui: backlog
-  6-3-gallery-filtering-logic: backlog
+  epic-6: done
+  6-1-extend-data-schema-for-tags: done
+  6-2-category-filter-ui: done
+  6-3-gallery-filtering-logic: done
   epic-6-retrospective: optional
 
-  epic-7: backlog
-  7-1-keyboard-and-swipe-navigation: backlog
-  7-2-markdown-support-for-photo-narratives: backlog
+  epic-7: done
+  7-1-keyboard-and-swipe-navigation: done
+  7-2-markdown-support-for-photo-narratives: done
   epic-7-retrospective: optional
 
   epic-8: backlog

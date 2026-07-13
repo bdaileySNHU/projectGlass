@@ -15,8 +15,8 @@
       "iso": "800"
     },
     "tags": {
-      "location": [],
-      "genre": []
+      "location": ["Japan", "Tokyo"],
+      "genre": ["Theme Park"]
     }
   },
   {
@@ -35,8 +35,8 @@
       "iso": "100"
     },
     "tags": {
-      "location": [],
-      "genre": []
+      "location": ["Japan", "Tokyo"],
+      "genre": ["Theme Park"]
     }
   },
   {
@@ -55,8 +55,8 @@
       "iso": "3200"
     },
     "tags": {
-      "location": [],
-      "genre": []
+      "location": ["Japan", "Tokyo"],
+      "genre": ["Theme Park"]
     }
   },
   {
@@ -75,8 +75,8 @@
       "iso": "3200"
     },
     "tags": {
-      "location": [],
-      "genre": []
+      "location": ["Japan", "Tokyo"],
+      "genre": ["Theme Park"]
     }
   },
   {
@@ -87,8 +87,8 @@
     "alt": "",
     "title": "",
     "tags": {
-      "location": [],
-      "genre": []
+      "location": ["Japan", "Kyoto"],
+      "genre": ["Nature"]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON Z f",
@@ -107,8 +107,8 @@
     "alt": "",
     "title": "",
     "tags": {
-      "location": [],
-      "genre": []
+      "location": ["Japan", "Kyoto"],
+      "genre": ["Nature"]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON Z f",
@@ -127,8 +127,8 @@
     "alt": "",
     "title": "",
     "tags": {
-      "location": [],
-      "genre": []
+      "location": ["Japan"],
+      "genre": ["Landscape"]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON Z f",
@@ -137,7 +137,8 @@
       "aperture": "f/4",
       "shutterSpeed": "1/2000s",
       "iso": "140"
-    }
+    },
+    "description": "Shot from the shores of **Lake Kawaguchiko** at sunrise. One of those mornings where the *haze lifted* for about ten minutes. [More about the area](https://en.wikipedia.org/wiki/Lake_Kawaguchi)."
   },
   {
     "id": "portland-headlight",
@@ -147,8 +148,8 @@
     "alt": "",
     "title": "",
     "tags": {
-      "location": [],
-      "genre": []
+      "location": ["Maine"],
+      "genre": ["Landscape"]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON D5300",
@@ -156,6 +157,26 @@
       "aperture": "f/13",
       "shutterSpeed": "1/250s",
       "iso": "200"
+    }
+  },
+  {
+    "id": "cheetah",
+    "src": "/photos/cheetah.jpeg",
+    "width": 6048,
+    "height": 4032,
+    "alt": "",
+    "title": "",
+    "tags": {
+      "location": [],
+      "genre": ["Wildlife"]
+    },
+    "exif": {
+      "camera": "NIKON CORPORATION NIKON Z f",
+      "lens": "TAMRON 70-300mm F/4.5-6.3 Di III RXD A047Z",
+      "focalLength": "126mm",
+      "aperture": "f/5",
+      "shutterSpeed": "1/1000s",
+      "iso": "220"
     }
   }
 ]

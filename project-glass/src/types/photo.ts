@@ -22,4 +22,5 @@ export interface Photo {
   exif?: ExifData;      // Optional EXIF block
   tags: PhotoTags;      // Required (Phase 2)
   priority?: boolean;   // If true, Next.js Image will prioritize loading (LCP)
+  description?: string; // Markdown narrative (shown in lightbox)
 }
