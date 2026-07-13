@@ -25,7 +25,7 @@ function formatShutterSpeed(exposureTime: number | undefined): string | undefine
 
 function formatAperture(fNumber: number | undefined): string | undefined {
   if (!fNumber) return undefined;
-  return `f/${fNumber}`;
+  return `f/${Math.round(fNumber * 10) / 10}`;
 }
 
 function formatFocalLength(fl: number | undefined): string | undefined {

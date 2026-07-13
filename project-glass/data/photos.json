@@ -15,8 +15,13 @@
       "iso": "800"
     },
     "tags": {
-      "location": ["Japan", "Tokyo"],
-      "genre": ["Theme Park"]
+      "location": [
+        "Japan",
+        "Tokyo"
+      ],
+      "genre": [
+        "Theme Park"
+      ]
     }
   },
   {
@@ -35,8 +40,13 @@
       "iso": "100"
     },
     "tags": {
-      "location": ["Japan", "Tokyo"],
-      "genre": ["Theme Park"]
+      "location": [
+        "Japan",
+        "Tokyo"
+      ],
+      "genre": [
+        "Theme Park"
+      ]
     }
   },
   {
@@ -55,8 +65,13 @@
       "iso": "3200"
     },
     "tags": {
-      "location": ["Japan", "Tokyo"],
-      "genre": ["Theme Park"]
+      "location": [
+        "Japan",
+        "Tokyo"
+      ],
+      "genre": [
+        "Theme Park"
+      ]
     }
   },
   {
@@ -75,8 +90,13 @@
       "iso": "3200"
     },
     "tags": {
-      "location": ["Japan", "Tokyo"],
-      "genre": ["Theme Park"]
+      "location": [
+        "Japan",
+        "Tokyo"
+      ],
+      "genre": [
+        "Theme Park"
+      ]
     }
   },
   {
@@ -87,8 +107,13 @@
     "alt": "Clusters of pink double cherry blossoms on a branch in Kyoto",
     "title": "Kyoto Cherry Blossoms",
     "tags": {
-      "location": ["Japan", "Kyoto"],
-      "genre": ["Nature"]
+      "location": [
+        "Japan",
+        "Kyoto"
+      ],
+      "genre": [
+        "Nature"
+      ]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON Z f",
@@ -107,8 +132,13 @@
     "alt": "Fallen leaf resting on a worn yellow fire hydrant cover set into stone pavement in Kyoto",
     "title": "Kyoto Street Detail",
     "tags": {
-      "location": ["Japan", "Kyoto"],
-      "genre": ["Street"]
+      "location": [
+        "Japan",
+        "Kyoto"
+      ],
+      "genre": [
+        "Street"
+      ]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON Z f",
@@ -127,8 +157,12 @@
     "alt": "Snow-capped Mount Fuji rising above a small town and rice fields under a clear sky",
     "title": "Mount Fuji",
     "tags": {
-      "location": ["Japan"],
-      "genre": ["Landscape"]
+      "location": [
+        "Japan"
+      ],
+      "genre": [
+        "Landscape"
+      ]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON Z f",
@@ -148,8 +182,12 @@
     "alt": "Portland Head Light lighthouse on the rocky Maine coast",
     "title": "Portland Head Light",
     "tags": {
-      "location": ["Maine"],
-      "genre": ["Landscape"]
+      "location": [
+        "Maine"
+      ],
+      "genre": [
+        "Landscape"
+      ]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON D5300",
@@ -168,7 +206,9 @@
     "title": "Cheetah",
     "tags": {
       "location": [],
-      "genre": ["Wildlife"]
+      "genre": [
+        "Wildlife"
+      ]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON Z f",
@@ -177,6 +217,86 @@
       "aperture": "f/5",
       "shutterSpeed": "1/1000s",
       "iso": "220"
+    }
+  },
+  {
+    "id": "pagoda-cherry-blossoms",
+    "src": "/photos/pagoda-cherry-blossoms.jpeg",
+    "width": 2859,
+    "height": 3000,
+    "alt": "Five-story pagoda with a golden spire seen through branches of pink cherry blossoms",
+    "title": "Pagoda in Bloom",
+    "tags": {
+      "location": ["Japan"],
+      "genre": ["Architecture"]
+    },
+    "exif": {
+      "camera": "NIKON CORPORATION NIKON Z f",
+      "lens": "NIKKOR Z 40mm f/2",
+      "focalLength": "40mm",
+      "aperture": "f/9",
+      "shutterSpeed": "1/640s",
+      "iso": "400"
+    }
+  },
+  {
+    "id": "river-rapids",
+    "src": "/photos/river-rapids.jpeg",
+    "width": 3000,
+    "height": 2000,
+    "alt": "Whitewater rapids rushing over granite ledges on a forest-lined river",
+    "title": "River Rapids",
+    "tags": {
+      "location": [],
+      "genre": ["Landscape"]
+    },
+    "exif": {
+      "camera": "NIKON CORPORATION NIKON Z f",
+      "lens": "NIKKOR Z 24-70mm f/4 S",
+      "focalLength": "70mm",
+      "aperture": "f/13",
+      "shutterSpeed": "1/8s",
+      "iso": "100"
+    }
+  },
+  {
+    "id": "highland-cow",
+    "src": "/photos/highland-cow.jpeg",
+    "width": 3000,
+    "height": 2000,
+    "alt": "Shaggy Highland cow with curved horns resting in a sunlit pasture",
+    "title": "Highland Cow",
+    "tags": {
+      "location": [],
+      "genre": ["Wildlife"]
+    },
+    "exif": {
+      "camera": "NIKON CORPORATION NIKON Z f",
+      "lens": "TAMRON 70-300mm F/4.5-6.3 Di III RXD A047Z",
+      "focalLength": "300mm",
+      "aperture": "f/8",
+      "shutterSpeed": "1/500s",
+      "iso": "250"
+    }
+  },
+  {
+    "id": "tulips",
+    "src": "/photos/tulips.jpeg",
+    "width": 3000,
+    "height": 2000,
+    "alt": "Bed of pale pink and white tulips with deep purple tulips behind in a garden",
+    "title": "Tulips",
+    "tags": {
+      "location": [],
+      "genre": ["Nature"]
+    },
+    "exif": {
+      "camera": "NIKON CORPORATION NIKON Z f",
+      "lens": "TAMRON 70-300mm F/4.5-6.3 Di III RXD A047Z",
+      "focalLength": "166mm",
+      "aperture": "f/5.3",
+      "shutterSpeed": "1/1000s",
+      "iso": "320"
     }
   }
 ]
