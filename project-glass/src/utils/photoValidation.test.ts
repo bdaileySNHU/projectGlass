@@ -119,7 +119,7 @@ describe('validatePhotos', () => {
     });
 
     it('reports missing location array', () => {
-      const photos = [{ ...basePhoto, tags: { location: undefined as any, genre: ['Street'] } }];
+      const photos = [{ ...basePhoto, tags: { location: undefined, genre: ['Street'] } as unknown as Photo['tags'] }];
       const assetSources = new Set(['/photos/test-photo.jpeg']);
 
       const issues = validatePhotos(photos, assetSources);
@@ -132,7 +132,7 @@ describe('validatePhotos', () => {
     });
 
     it('reports missing genre array', () => {
-      const photos = [{ ...basePhoto, tags: { location: ['Tokyo'], genre: undefined as any } }];
+      const photos = [{ ...basePhoto, tags: { location: ['Tokyo'], genre: undefined } as unknown as Photo['tags'] }];
       const assetSources = new Set(['/photos/test-photo.jpeg']);
 
       const issues = validatePhotos(photos, assetSources);

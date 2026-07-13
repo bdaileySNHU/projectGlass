@@ -84,8 +84,8 @@
     "src": "/photos/kyoto-cherry-blossom.jpg",
     "width": 3826,
     "height": 5741,
-    "alt": "",
-    "title": "",
+    "alt": "Clusters of pink double cherry blossoms on a branch in Kyoto",
+    "title": "Kyoto Cherry Blossoms",
     "tags": {
       "location": ["Japan", "Kyoto"],
       "genre": ["Nature"]
@@ -104,11 +104,11 @@
     "src": "/photos/kyoto-leaf.jpg",
     "width": 2826,
     "height": 4240,
-    "alt": "",
-    "title": "",
+    "alt": "Fallen leaf resting on a worn yellow fire hydrant cover set into stone pavement in Kyoto",
+    "title": "Kyoto Street Detail",
     "tags": {
       "location": ["Japan", "Kyoto"],
-      "genre": ["Nature"]
+      "genre": ["Street"]
     },
     "exif": {
       "camera": "NIKON CORPORATION NIKON Z f",
@@ -124,8 +124,8 @@
     "src": "/photos/mt-fuji.jpeg",
     "width": 5099,
     "height": 3579,
-    "alt": "",
-    "title": "",
+    "alt": "Snow-capped Mount Fuji rising above a small town and rice fields under a clear sky",
+    "title": "Mount Fuji",
     "tags": {
       "location": ["Japan"],
       "genre": ["Landscape"]
@@ -138,15 +138,15 @@
       "shutterSpeed": "1/2000s",
       "iso": "140"
     },
-    "description": "Shot from the shores of **Lake Kawaguchiko** at sunrise. One of those mornings where the *haze lifted* for about ten minutes. [More about the area](https://en.wikipedia.org/wiki/Lake_Kawaguchi)."
+    "description": "**Mount Fuji** over rooftops and rice fields — the kind of clear day where the *whole mountain* shows itself. [More about Fuji](https://en.wikipedia.org/wiki/Mount_Fuji)."
   },
   {
     "id": "portland-headlight",
     "src": "/photos/portland-headlight.jpeg",
     "width": 5978,
     "height": 3978,
-    "alt": "",
-    "title": "",
+    "alt": "Portland Head Light lighthouse on the rocky Maine coast",
+    "title": "Portland Head Light",
     "tags": {
       "location": ["Maine"],
       "genre": ["Landscape"]
@@ -164,8 +164,8 @@
     "src": "/photos/cheetah.jpeg",
     "width": 6048,
     "height": 4032,
-    "alt": "",
-    "title": "",
+    "alt": "Cheetah in dappled sunlight looking through a wire fence, with a second cheetah behind",
+    "title": "Cheetah",
     "tags": {
       "location": [],
       "genre": ["Wildlife"]
