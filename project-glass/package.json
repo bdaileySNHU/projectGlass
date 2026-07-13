@@ -9,6 +9,7 @@
     "lint": "eslint",
     "type-check": "tsc --noEmit",
     "sync-photos": "tsx scripts/sync-photos.ts",
+    "validate-photos": "tsx scripts/validate-photos.ts",
     "test": "vitest run"
   },
   "dependencies": {
