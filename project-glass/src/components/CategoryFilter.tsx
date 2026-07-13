@@ -18,6 +18,8 @@ function FilterRow({ label, tags, selected, onSelect }: FilterRowProps) {
         return (
           <button
             key={tag}
+            type="button"
+            aria-pressed={isActive}
             onClick={() => onSelect(tag === "All" ? null : tag)}
             className={`whitespace-nowrap text-xs font-light uppercase tracking-widest transition-colors ${
               isActive

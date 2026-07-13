@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, useMemo } from "react";
 import { MasonryPhotoAlbum } from "react-photo-album";
 import "react-photo-album/masonry.css";
 import Lightbox from "yet-another-react-lightbox";
@@ -12,6 +12,7 @@ import { Photo } from "@/types/photo";
 import renderPhotoCard from "@/components/PhotoCard";
 import CategoryFilter from "@/components/CategoryFilter";
 import { formatExif } from "@/utils/format";
+import { filterPhotos, availableLocations, availableGenres } from "@/utils/photoFilters";
 
 interface GalleryProps {
   photos: Photo[];
@@ -21,39 +22,18 @@ const trackLightboxOpen = (photoId: string) => {
   (window as { umami?: { track: (event: string, data?: Record<string, string>) => void } }).umami?.track("lightbox-open", { photo: photoId });
 };
 
-const uniqueTags = (photos: Photo[], dimension: "location" | "genre") =>
-  [...new Set(photos.flatMap((p) => p.tags[dimension]))].sort();
-
 export default function Gallery({ photos }: GalleryProps) {
   const [index, setIndex] = useState(-1);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
-  const filteredPhotos = photos.filter((photo) => {
-    const matchesLocation =
-      selectedLocation === null ||
-      photo.tags.location.includes(selectedLocation);
-    const matchesGenre =
-      selectedGenre === null ||
-      photo.tags.genre.includes(selectedGenre);
-    return matchesLocation && matchesGenre;
-  });
-
-  const locations =
-    selectedGenre === null
-      ? uniqueTags(photos, "location")
-      : uniqueTags(
-          photos.filter((photo) => photo.tags.genre.includes(selectedGenre)),
-          "location"
-        );
-
-  const genres =
-    selectedLocation === null
-      ? uniqueTags(photos, "genre")
-      : uniqueTags(
-          photos.filter((photo) => photo.tags.location.includes(selectedLocation)),
-          "genre"
-        );
+  const { filteredPhotos, locations, genres } = useMemo(() => {
+    return {
+      filteredPhotos: filterPhotos(photos, selectedLocation, selectedGenre),
+      locations: availableLocations(photos, selectedGenre),
+      genres: availableGenres(photos, selectedLocation),
+    };
+  }, [photos, selectedLocation, selectedGenre]);
 
   const slides = filteredPhotos.map((photo) => {
     const exifDescription = formatExif(photo.exif);
