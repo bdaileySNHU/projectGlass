@@ -15,8 +15,18 @@ interface SlideshowProps {
   photos: Photo[];
 }
 
-const AUTOPLAY_MS = 5000;
+// Wallpaper pacing: bare number or "12m" = minutes, "30s" = seconds.
+const DEFAULT_DWELL_MS = 12 * 60_000;
 const FADE_MS = 700;
+const CHROME_HIDE_MS = 5000;
+
+function dwellFromUrl(): number {
+  if (typeof window === "undefined") return DEFAULT_DWELL_MS;
+  const raw = new URLSearchParams(window.location.search).get("dwell");
+  const m = raw?.match(/^(\d+)(s|m)?$/);
+  if (!m) return DEFAULT_DWELL_MS;
+  return Number(m[1]) * (m[2] === "s" ? 1000 : 60_000);
+}
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -33,6 +43,31 @@ function useReducedMotion(): boolean {
   );
 }
 
+/** True while the user is interacting; false after a few idle seconds. */
+function useChromeVisible(): boolean {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    let timer = setTimeout(() => setVisible(false), CHROME_HIDE_MS);
+    const wake = () => {
+      setVisible(true);
+      clearTimeout(timer);
+      timer = setTimeout(() => setVisible(false), CHROME_HIDE_MS);
+    };
+    window.addEventListener("mousemove", wake);
+    window.addEventListener("keydown", wake);
+    window.addEventListener("touchstart", wake);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("mousemove", wake);
+      window.removeEventListener("keydown", wake);
+      window.removeEventListener("touchstart", wake);
+    };
+  }, []);
+
+  return visible;
+}
+
 export default function Slideshow({ photos }: SlideshowProps) {
   const router = useRouter();
   const count = photos.length;
@@ -41,7 +76,9 @@ export default function Slideshow({ photos }: SlideshowProps) {
   // current/previous index pair drives the crossfade
   const [slide, setSlide] = useState({ current: 0, previous: -1 });
   const [isPlaying, setIsPlaying] = useState(true);
+  const [dwellMs] = useState(dwellFromUrl);
   const reducedMotion = useReducedMotion();
+  const chromeVisible = useChromeVisible();
 
   const { current, previous } = slide;
   // Autoplay/crossfade only run when motion is allowed and there's more than one photo.
@@ -68,9 +105,9 @@ export default function Slideshow({ photos }: SlideshowProps) {
   // Autoplay timer — resets on each advance so manual nav gives a fresh interval.
   useEffect(() => {
     if (!isPlaying || !canAnimate) return;
-    const id = setInterval(next, AUTOPLAY_MS);
+    const id = setInterval(next, dwellMs);
     return () => clearInterval(id);
-  }, [isPlaying, canAnimate, next, current]);
+  }, [isPlaying, canAnimate, next, current, dwellMs]);
 
   // Clear the outgoing layer once the crossfade has finished.
   useEffect(() => {
@@ -115,38 +152,25 @@ export default function Slideshow({ photos }: SlideshowProps) {
   }
 
   const photo = photos[current];
-  const ratio = photo.width && photo.height ? photo.width / photo.height : 3 / 2;
   const location = posterLocation(photo);
   const title = posterTitle(photo);
   const meta = posterMeta(photo);
   const nextIndex = (current + 1) % count;
   const playing = isPlaying && canAnimate;
-
-  // Fit the print within the viewport: width ≤ 88vw and derived height ≤ 70vh.
-  const windowWidth = `min(88vw, calc(70vh * ${ratio}))`;
+  const chromeClass = chromeVisible
+    ? "opacity-100"
+    : "pointer-events-none opacity-0";
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center bg-dark p-6">
-      <Link
-        href="/"
-        aria-label="Back to gallery"
-        className="absolute left-5 top-5 z-20 text-sm tracking-wide text-text-tertiary transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
-      >
-        ← Gallery
-      </Link>
-
-      {/* The print: off-white mat hugging the photo, framed by the screen edge. */}
+    <main className="fixed inset-0 cursor-default overflow-hidden">
+      {/* The print: off-white mat filling the screen edge to edge, TV-wallpaper style. */}
       <figure
         role="group"
         aria-roledescription="slide"
         aria-label={location ? `${title}, ${location}` : title}
-        className="m-0 flex flex-col bg-[#f5f2e9] px-4 pb-8 pt-4 shadow-2xl sm:px-6 sm:pb-10 sm:pt-6"
-        style={{ width: windowWidth }}
+        className="m-0 flex h-full w-full flex-col bg-[#f5f2e9] px-6 pb-8 pt-6 sm:px-10 sm:pb-10 sm:pt-10"
       >
-        <div
-          className="relative w-full overflow-hidden"
-          style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
-        >
+        <div className="relative min-h-0 w-full flex-1">
           {previous >= 0 && previous !== current && (
             <Image
               key={`prev-${previous}`}
@@ -154,7 +178,7 @@ export default function Slideshow({ photos }: SlideshowProps) {
               src={photos[previous].src}
               alt=""
               aria-hidden
-              sizes="88vw"
+              sizes="100vw"
               className="object-contain"
             />
           )}
@@ -164,7 +188,7 @@ export default function Slideshow({ photos }: SlideshowProps) {
             priority
             src={photo.src}
             alt={posterTitle(photo)}
-            sizes="88vw"
+            sizes="100vw"
             className="poster-fade-in object-contain"
           />
           {/* Hidden layer that warms the cache for the next slide. */}
@@ -175,13 +199,13 @@ export default function Slideshow({ photos }: SlideshowProps) {
               src={photos[nextIndex].src}
               alt=""
               aria-hidden
-              sizes="88vw"
+              sizes="100vw"
               className="pointer-events-none object-contain opacity-0"
             />
           )}
         </div>
 
-        <figcaption className="relative pt-5 text-center">
+        <figcaption className="relative pt-6 text-center">
           {location && (
             <p className="mb-1 text-[0.65rem] uppercase tracking-[0.3em] text-neutral-500">
               {location}
@@ -198,14 +222,24 @@ export default function Slideshow({ photos }: SlideshowProps) {
         </figcaption>
       </figure>
 
-      {/* Controls */}
-      <div className="mt-6 flex items-center gap-6 text-text-tertiary">
+      {/* Chrome overlay — fades out after a few idle seconds for TV display. */}
+      <Link
+        href="/"
+        aria-label="Back to gallery"
+        className={`absolute left-5 top-5 z-20 text-sm tracking-wide text-neutral-500 transition-opacity duration-500 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${chromeClass}`}
+      >
+        ← Gallery
+      </Link>
+
+      <div
+        className={`absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-6 rounded-full bg-black/60 px-5 py-2 text-sm text-white/80 transition-opacity duration-500 ${chromeClass}`}
+      >
         <button
           type="button"
           onClick={prev}
           disabled={!multiple}
           aria-label="Previous photo"
-          className="transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent disabled:opacity-30 disabled:hover:text-text-tertiary"
+          className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent disabled:opacity-30"
         >
           ‹ Prev
         </button>
@@ -215,7 +249,7 @@ export default function Slideshow({ photos }: SlideshowProps) {
           onClick={togglePlay}
           disabled={!canAnimate}
           aria-label={playing ? "Pause slideshow" : "Play slideshow"}
-          className="min-w-[3.5rem] transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent disabled:opacity-30 disabled:hover:text-text-tertiary"
+          className="min-w-[3.5rem] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent disabled:opacity-30"
         >
           {playing ? "❚❚ Pause" : "▶ Play"}
         </button>
@@ -225,15 +259,15 @@ export default function Slideshow({ photos }: SlideshowProps) {
           onClick={next}
           disabled={!multiple}
           aria-label="Next photo"
-          className="transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent disabled:opacity-30 disabled:hover:text-text-tertiary"
+          className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent disabled:opacity-30"
         >
           Next ›
         </button>
-      </div>
 
-      <p className="mt-3 text-xs tracking-widest text-text-tertiary">
-        {current + 1} / {count}
-      </p>
+        <span className="text-xs tracking-widest text-white/60">
+          {current + 1} / {count}
+        </span>
+      </div>
 
       {/* Screen-reader announcement of the current slide. */}
       <p aria-live="polite" className="sr-only">
