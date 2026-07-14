@@ -37,8 +37,6 @@ export default function Gallery({ photos }: GalleryProps) {
 
   const slides = filteredPhotos.map((photo) => {
     const exifDescription = formatExif(photo.exif);
-    const subject = `Print inquiry: ${photo.title || photo.id} (${photo.id})`;
-    const mailto = `mailto:dailey.105@gmail.com?subject=${encodeURIComponent(subject)}`;
 
     const description: ReactNode = (
       <>
@@ -63,12 +61,6 @@ export default function Gallery({ photos }: GalleryProps) {
             </ReactMarkdown>
           </div>
         )}
-        <a
-          href={mailto}
-          className="mt-2 inline-block text-xs text-text-secondary underline transition-colors hover:text-text-primary"
-        >
-          Inquire about print
-        </a>
       </>
     );
 
