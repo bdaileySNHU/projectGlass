@@ -43,12 +43,12 @@
 
 | Check | Method | Observed result |
 |---|---|---|
-| Query parsing and normalization | focused unit/component tests | Pending |
-| Filter interaction | keyboard, pointer, and touch-emulation checks | Pending |
-| Responsive layout | browser screenshots/inspection at 320px, 375px, 768px, and desktop widths | Pending |
-| History and sharing | direct-load, copy/paste, Back, and Forward checks | Pending |
-| Filtered lightbox | open/navigate/close after applying each filter combination | Pending |
-| Quality gate | `npm run lint && npm run type-check && npm test && npm run build` | Pending |
+| Query parsing and normalization | focused unit/component tests | 45 tests in `filterParams.test.ts` pass (valid, unknown, case-insensitive, encoded, garbage, round-trip) |
+| Filter interaction | keyboard, pointer, and touch-emulation checks | Pending — manual browser check on live site |
+| Responsive layout | browser screenshots/inspection at 320px, 375px, 768px, and desktop widths | Pending — manual browser check on live site |
+| History and sharing | direct-load, copy/paste, Back, and Forward checks | Pending — manual browser check on live site |
+| Filtered lightbox | open/navigate/close after applying each filter combination | Pending — manual browser check on live site |
+| Quality gate | `npm run lint && npm run type-check && npm test && npm run build` | All pass, 128 tests, zero lint errors/warnings (2026-07-15) |
 
 ## Out of scope
 

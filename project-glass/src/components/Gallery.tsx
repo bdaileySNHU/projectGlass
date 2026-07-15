@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ReactNode, useMemo } from "react";
+import { useState, useEffect, useCallback, ReactNode, useMemo } from "react";
 import { MasonryPhotoAlbum } from "react-photo-album";
 import "react-photo-album/masonry.css";
 import Lightbox from "yet-another-react-lightbox";
@@ -13,6 +13,7 @@ import renderPhotoCard from "@/components/PhotoCard";
 import CategoryFilter from "@/components/CategoryFilter";
 import { formatExif } from "@/utils/format";
 import { filterPhotos, availableLocations, availableGenres } from "@/utils/photoFilters";
+import { parseFilterParams, filterSearch } from "@/utils/filterParams";
 
 interface GalleryProps {
   photos: Photo[];
@@ -34,6 +35,33 @@ export default function Gallery({ photos }: GalleryProps) {
       genres: availableGenres(photos, selectedLocation),
     };
   }, [photos, selectedLocation, selectedGenre]);
+
+  // Full taxonomies (unfaceted) for validating URL params.
+  const allLocations = useMemo(() => availableLocations(photos, null), [photos]);
+  const allGenres = useMemo(() => availableGenres(photos, null), [photos]);
+
+  // Restore filters from the URL on load and on browser Back/Forward.
+  useEffect(() => {
+    const apply = () => {
+      const sel = parseFilterParams(window.location.search, allLocations, allGenres);
+      setSelectedLocation(sel.location);
+      setSelectedGenre(sel.genre);
+    };
+    apply();
+    window.addEventListener("popstate", apply);
+    return () => window.removeEventListener("popstate", apply);
+  }, [allLocations, allGenres]);
+
+  // User-driven selection: update state and push the shareable URL.
+  const selectFilters = useCallback(
+    (location: string | null, genre: string | null) => {
+      setSelectedLocation(location);
+      setSelectedGenre(genre);
+      const url = `${window.location.pathname}${filterSearch(location, genre)}`;
+      window.history.pushState(null, "", url);
+    },
+    [],
+  );
 
   const slides = filteredPhotos.map((photo) => {
     const exifDescription = formatExif(photo.exif);
@@ -78,8 +106,9 @@ export default function Gallery({ photos }: GalleryProps) {
         genres={genres}
         selectedLocation={selectedLocation}
         selectedGenre={selectedGenre}
-        onLocationChange={setSelectedLocation}
-        onGenreChange={setSelectedGenre}
+        onLocationChange={(location) => selectFilters(location, selectedGenre)}
+        onGenreChange={(genre) => selectFilters(selectedLocation, genre)}
+        onClear={() => selectFilters(null, null)}
       />
       <div key={`${selectedLocation}-${selectedGenre}`} className="fade-in">
         <MasonryPhotoAlbum

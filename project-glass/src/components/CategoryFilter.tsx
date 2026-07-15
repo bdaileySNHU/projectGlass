@@ -42,6 +42,7 @@ interface CategoryFilterProps {
   selectedGenre: string | null;
   onLocationChange: (tag: string | null) => void;
   onGenreChange: (tag: string | null) => void;
+  onClear: () => void;
 }
 
 export default function CategoryFilter({
@@ -51,13 +52,9 @@ export default function CategoryFilter({
   selectedGenre,
   onLocationChange,
   onGenreChange,
+  onClear,
 }: CategoryFilterProps) {
   const hasActiveFilter = selectedLocation !== null || selectedGenre !== null;
-
-  const handleClearAll = () => {
-    onLocationChange(null);
-    onGenreChange(null);
-  };
 
   return (
     <div className="mb-6 flex flex-col gap-3">
@@ -77,7 +74,7 @@ export default function CategoryFilter({
         <div className="flex justify-center pt-2">
           <button
             type="button"
-            onClick={handleClearAll}
+            onClick={onClear}
             className="min-h-11 text-xs font-light uppercase tracking-widest text-text-tertiary underline transition-colors hover:text-text-primary"
           >
             Clear filters
