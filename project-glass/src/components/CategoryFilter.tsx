@@ -9,8 +9,8 @@ interface FilterRowProps {
 
 function FilterRow({ label, tags, selected, onSelect }: FilterRowProps) {
   return (
-    <div className="flex items-baseline gap-4 overflow-x-auto scrollbar-hide px-4 sm:justify-center sm:px-0">
-      <span className="shrink-0 text-xs font-light uppercase tracking-widest text-text-tertiary">
+    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 sm:justify-center sm:px-0">
+      <span className="text-xs font-light uppercase tracking-widest text-text-tertiary">
         {label}
       </span>
       {["All", ...tags].map((tag) => {
@@ -21,7 +21,7 @@ function FilterRow({ label, tags, selected, onSelect }: FilterRowProps) {
             type="button"
             aria-pressed={isActive}
             onClick={() => onSelect(tag === "All" ? null : tag)}
-            className={`whitespace-nowrap text-xs font-light uppercase tracking-widest transition-colors ${
+            className={`min-h-11 min-w-11 whitespace-nowrap px-1 text-xs font-light uppercase tracking-widest transition-colors ${
               isActive
                 ? "border-b-2 border-accent text-accent"
                 : "text-text-secondary hover:text-text-primary"
@@ -52,6 +52,13 @@ export default function CategoryFilter({
   onLocationChange,
   onGenreChange,
 }: CategoryFilterProps) {
+  const hasActiveFilter = selectedLocation !== null || selectedGenre !== null;
+
+  const handleClearAll = () => {
+    onLocationChange(null);
+    onGenreChange(null);
+  };
+
   return (
     <div className="mb-6 flex flex-col gap-3">
       <FilterRow
@@ -66,6 +73,17 @@ export default function CategoryFilter({
         selected={selectedGenre}
         onSelect={onGenreChange}
       />
+      {hasActiveFilter && (
+        <div className="flex justify-center pt-2">
+          <button
+            type="button"
+            onClick={handleClearAll}
+            className="min-h-11 text-xs font-light uppercase tracking-widest text-text-tertiary underline transition-colors hover:text-text-primary"
+          >
+            Clear filters
+          </button>
+        </div>
+      )}
     </div>
   );
 }

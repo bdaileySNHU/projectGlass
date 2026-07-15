@@ -20,13 +20,6 @@ body {
   font-size: 0.75rem;
 }
 
-.scrollbar-hide {
-  scrollbar-width: none;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
 @keyframes poster-fade-in {
   from {
     opacity: 0;
